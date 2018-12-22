@@ -10,21 +10,35 @@ const API_KEY = 'AIzaSyCUT4VhV-iiOBe6mTiN2IMoFwD-AljA6HQ';
 
 
 class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    
-    this.state =  { videos: [] };
-    YTSearch({key: API_KEY, term: '먹방'}, (videos) => {
-      this.setState( { videos });
-      //this.setState({ videos : videos })
+
+    this.state = {
+      videos: [],
+      selectedVideo: null
+    };
+
+    this.videoSearch("beyonce");
+  }
+
+  videoSearch(term) {
+    YTSearch({ key: API_KEY, term: term }, videos => {
+      this.setState({
+        videos: videos,
+        selectedVideo: videos[0]
+      });
     });
   }
+
   render() {
-    return ( 
+    return (
       <div>
         <SearchBar />
-        <VideoDetail video={ this.state.videos[0] } />
-        <VideoList videos={ this.state.videos }/>
+        <VideoDetail video={this.state.selectedVideo} />
+        <VideoList
+          onVideoSelect={selectedVideo => this.setState({ selectedVideo })}
+          videos={this.state.videos}
+        />
       </div>
     );
   }
